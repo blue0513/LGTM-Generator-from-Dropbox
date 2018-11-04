@@ -1,10 +1,10 @@
-# LGTM-Gerator from Dropbox
+# LGTM-Generator from Dropbox
 
 It's still WIP.
 
 ## Usage
 
-### 1. Edit setting.json
+### 1. Edit settings.json
 
 Rename `settings.json.sample` to `settings.json`.
 
