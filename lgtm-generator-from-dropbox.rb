@@ -1,10 +1,13 @@
 require 'dropbox_api'
 require 'RMagick'
 require 'json'
+require 'optparse'
+require './uploader.rb'
 
 ## Settings ##
 
-OUTPUT_IMAGE = 'sample.jpg'.freeze
+ORIGINAL_IMAGE = 'sample.jpg'.freeze
+OUTPUT_IMAGE = 'output.jpg'.freeze
 JSON_FILE_PATH = 'settings.json'.freeze
 @text = 'LGTM'
 @color = 'red'
@@ -13,7 +16,7 @@ JSON_FILE_PATH = 'settings.json'.freeze
 
 def download_image(client:, download_image_name:)
   client.download(download_image_name) do |chunk|
-    open(OUTPUT_IMAGE, 'wb') do |file|
+    open(ORIGINAL_IMAGE, 'wb') do |file|
       file << chunk
     end
   end
@@ -38,6 +41,10 @@ def generate_lgtm(file:, text:, color:)
   img.write('output.jpg')
 end
 
+## Read options ##
+
+params = ARGV.getopts('', 'upload', 'color:')
+
 ## Execution ##
 
 puts 'Reading Settings ...'
@@ -61,6 +68,18 @@ puts 'Downloading Image ...'
 download_image(client: client, download_image_name: download_image_name)
 
 puts 'Generating LGTM Image ...'
-generate_lgtm(file: OUTPUT_IMAGE, text: @text, color: @color)
+if params['upload']
+  @color = params['color']
+end
+generate_lgtm(file: ORIGINAL_IMAGE, text: @text, color: @color)
+
+if params['upload']
+  puts 'Uploading Image to Gyazo ...'
+  path = OUTPUT_IMAGE
+  access_token = json_data['gyazo_access_token']
+
+  @image_url = UploadToGyazo.upload(path: path, access_token: access_token)
+end
 
 puts 'Finish!!'
+puts @image_url unless @image_url.nil?

@@ -25,6 +25,7 @@ PLATFORMS
 
 DEPENDENCIES
   dropbox_api
+  faraday
   json
   rmagick
 

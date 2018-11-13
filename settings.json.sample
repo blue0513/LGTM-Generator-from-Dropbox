@@ -1,4 +1,5 @@
 {
 "access_token": "YOUR_ACCESS_TOKEN",
-"target_directory": "/YOUR/DIRECTORY/"
+"target_directory": "/YOUR/DIRECTORY/",
+"gyazo_access_token": "YOUR_GYAZO_ACCESS_TOKEN"
 }

@@ -23,3 +23,25 @@ You can generate LGTM image as `output.jpg`.
 ```sh
 $ ruby lgtm-generator-from-dropbox.rb
 ```
+
+## Advanced Usage
+
+### Change LGTM color
+
+Use `--color` option
+
+```sh
+$ ruby lgtm-generator-from-dropbox.rb --color white
+```
+
+### Upload LGTM image to Gyazo
+
+Edit `gyazo_access_token` in settings.json.   
+(You can get access_token from [here](https://gyazo.com/oauth/applications) by creating new app)
+
+Then, use `--upload` option
+
+```sh
+$ ruby lgtm-generator-from-dropbox.rb --upload
+# After uploading image, You can get the Gyazo Image URL
+```
