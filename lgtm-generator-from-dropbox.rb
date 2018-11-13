@@ -11,6 +11,7 @@ OUTPUT_IMAGE = 'output.jpg'.freeze
 JSON_FILE_PATH = 'settings.json'.freeze
 @text = 'LGTM'
 @color = 'red'
+@size = nil
 
 ## Methods ##
 
@@ -22,8 +23,19 @@ def download_image(client:, download_image_name:)
   end
 end
 
-def generate_lgtm(file:, text:, color:)
+def generate_lgtm(file:, text:, color:, size:)
   img = Magick::Image.read(file).first
+
+  if size
+    unless size =~ /\dx\d/
+      puts '--size option should be like `320x480`'
+      return
+    end
+
+    img.change_geometry!(size) do |cols, rows, im|
+      im.resize!(cols, rows)
+    end
+  end
 
   width = img.columns
   size = width / @text.size
@@ -43,7 +55,7 @@ end
 
 ## Read options ##
 
-params = ARGV.getopts('', 'upload', 'color:')
+params = ARGV.getopts('', 'upload', 'color:', 'size:')
 
 ## Execution ##
 
@@ -58,7 +70,7 @@ client = DropboxApi::Client.new(
 )
 
 puts 'Reading Dropbox files ...'
-file_list = client.list_folder(json_data['target_directory'], { recursive: true })
+file_list = client.list_folder(json_data['target_directory'], recursive: true)
 
 # Get an image randomly in the directory
 file_name = file_list.entries.sample.name
@@ -68,10 +80,9 @@ puts 'Downloading Image ...'
 download_image(client: client, download_image_name: download_image_name)
 
 puts 'Generating LGTM Image ...'
-if params['color']
-  @color = params['color']
-end
-generate_lgtm(file: ORIGINAL_IMAGE, text: @text, color: @color)
+@color = params['color'] if params['color']
+@size = params['size'] if params['size']
+generate_lgtm(file: ORIGINAL_IMAGE, text: @text, color: @color, size: @size)
 
 if params['upload']
   puts 'Uploading Image to Gyazo ...'

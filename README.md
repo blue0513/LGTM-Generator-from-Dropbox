@@ -34,6 +34,15 @@ Use `--color` option
 $ ruby lgtm-generator-from-dropbox.rb --color white
 ```
 
+### Change LGTM image size
+
+Use `--size` option.  
+`--size` should be like `640x480`.
+
+```sh
+$ ruby lgtm-generator-from-dropbox.rb --size 640x480
+```
+
 ### Upload LGTM image to Gyazo
 
 Edit `gyazo_access_token` in settings.json.   
