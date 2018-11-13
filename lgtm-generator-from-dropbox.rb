@@ -68,7 +68,7 @@ puts 'Downloading Image ...'
 download_image(client: client, download_image_name: download_image_name)
 
 puts 'Generating LGTM Image ...'
-if params['upload']
+if params['color']
   @color = params['color']
 end
 generate_lgtm(file: ORIGINAL_IMAGE, text: @text, color: @color)
