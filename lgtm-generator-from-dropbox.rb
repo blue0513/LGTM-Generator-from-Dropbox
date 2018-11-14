@@ -1,3 +1,4 @@
+require 'bundler/setup'
 require 'dropbox_api'
 require 'RMagick'
 require 'json'
