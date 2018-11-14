@@ -16,6 +16,8 @@ $ vi settings.json
 Write your access_token of Dropbox & target directory in Dropbox.  
 To get access_token, you need to access [Dropbox Developers page](https://www.dropbox.com/developers) and create your app.
 
+NOTE: The target directory is a string which starts and _ends_ with slash, e.g. `/path/to/img/`
+
 ### 2. Execute
 
 You can generate LGTM image as `output.jpg`.
