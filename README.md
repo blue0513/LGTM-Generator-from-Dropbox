@@ -43,9 +43,18 @@ Use `--size` option.
 $ ruby lgtm-generator-from-dropbox.rb --size 640x480
 ```
 
+### Generate LGTM gif
+
+Use `--gif` option
+
+```sh
+$ ruby lgtm-generator-from-dropbox.rb --gif
+# output.gif will be generated instead
+```
+
 ### Upload LGTM image to Gyazo
 
-Edit `gyazo_access_token` in settings.json.   
+Edit `gyazo_access_token` in settings.json.  
 (You can get access_token from [here](https://gyazo.com/oauth/applications) by creating new app)
 
 Then, use `--upload` option
