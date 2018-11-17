@@ -1,6 +1,18 @@
 # LGTM-Generator from Dropbox
 
-It's still WIP.
+Generate LGTM image from your favorite images on [Dropbox](http://dropbox.com) !
+
+![](https://i.gyazo.com/58fbbbee8fcc98944aa66d084054b16b.gif)
+
+### features
+
++ Download an image from your Dropbox.
++ Add "LGTM" on the downloaded image.
++ Many options
+  + Change "LGTM" text color.
+  + Resize the image.
+  + Generate Gif image.
+  + Upload the image to [Gyazo](https://gyazo.com).
 
 ## Usage
 
@@ -38,7 +50,7 @@ $ ruby lgtm-generator-from-dropbox.rb --color white
 
 ### Change LGTM image size
 
-Use `--size` option.  
+Use `--size` option  
 `--size` should be like `640x480`.
 
 ```sh
