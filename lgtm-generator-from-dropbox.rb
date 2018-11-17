@@ -3,8 +3,8 @@ require 'dropbox_api'
 require 'RMagick'
 require 'json'
 require 'optparse'
-require './generator.rb'
-require './uploader.rb'
+require './lib/generator.rb'
+require './lib/uploader.rb'
 
 ## Settings ##
 
