@@ -8,8 +8,9 @@ require './uploader.rb'
 
 ## Settings ##
 
-ORIGINAL_IMAGE = 'sample.jpg'.freeze
-OUTPUT_IMAGE = 'output.jpg'.freeze
+ORIGINAL_IMAGE_NAME = 'sample.jpg'.freeze
+OUTPUT_IMAGE_NAME = 'output.jpg'.freeze
+OUTPUT_GIF_NAME = 'output.gif'.freeze
 JSON_FILE_PATH = 'settings.json'.freeze
 @text = 'LGTM'
 @color = 'red'
@@ -19,7 +20,7 @@ JSON_FILE_PATH = 'settings.json'.freeze
 
 def download_image(client:, download_image_name:)
   client.download(download_image_name) do |chunk|
-    open(ORIGINAL_IMAGE, 'wb') do |file|
+    open(ORIGINAL_IMAGE_NAME, 'wb') do |file|
       file << chunk
     end
   end
@@ -44,7 +45,8 @@ def generate_lgtm(file:, text:, color:, size:, gif:)
   font_size = width / @text.size
 
   generator = gif ? Generator::Gif : Generator::Jpg
-  generator.generate!(img: img, text: text, color: color, font_size: font_size)
+  output_file = gif ? OUTPUT_GIF_NAME : OUTPUT_IMAGE_NAME
+  generator.generate!(img: img, text: text, color: color, font_size: font_size, output_file: output_file)
 end
 
 ## Read options ##
@@ -77,14 +79,14 @@ puts 'Generating LGTM Image ...'
 @color = params['color'] if params['color']
 @size = params['size'] if params['size']
 gif = params['gif']
-generate_lgtm(file: ORIGINAL_IMAGE, text: @text, color: @color, size: @size, gif: gif)
+generate_lgtm(file: ORIGINAL_IMAGE_NAME, text: @text, color: @color, size: @size, gif: gif)
 
 if params['upload']
   puts 'Uploading Image to Gyazo ...'
-  path = OUTPUT_IMAGE
+  path = params['gif'] ? OUTPUT_GIF_NAME : OUTPUT_IMAGE_NAME
   access_token = json_data['gyazo_access_token']
 
-  @image_url = UploadToGyazo.upload(path: path, access_token: access_token)
+  @image_url = UploadToGyazo.upload(path: path, access_token: access_token, is_gif: params['gif'])
 end
 
 puts 'Finish!!'

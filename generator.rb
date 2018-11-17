@@ -15,7 +15,7 @@ module Generator
     module_function
 
     # duck type
-    def generate!(img:, text:, font_size:, color:)
+    def generate!(img:, text:, font_size:, color:, output_file:)
       cloned = img.dup
 
       # TODO: position
@@ -24,7 +24,7 @@ module Generator
         self.fill = color
       end
 
-      cloned.write('output.jpg')
+      cloned.write(output_file)
     end
   end
 
@@ -33,7 +33,7 @@ module Generator
     module_function
 
     # duck type
-    def generate!(img:, text:, font_size:, color:)
+    def generate!(img:, text:, font_size:, color:, output_file:)
       image_list = Magick::ImageList.new.tap do |list|
         offsets.each do |offset_x|
           cloned = img.dup
@@ -47,7 +47,7 @@ module Generator
         end
       end
 
-      image_list.write('output.gif')
+      image_list.write(output_file)
     end
 
     def offsets
