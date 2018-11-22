@@ -5,6 +5,7 @@ require 'json'
 require 'optparse'
 require './lib/generator.rb'
 require './lib/uploader.rb'
+require './lib/color.rb'
 
 ## Settings ##
 
@@ -25,7 +26,6 @@ def download_image(client:, download_image_name:)
     end
   end
 end
-
 
 def generate_lgtm(file:, text:, color:, size:, gif:)
   img = Magick::Image.read(file).first
@@ -51,7 +51,7 @@ end
 
 ## Read options ##
 
-params = ARGV.getopts('', 'upload', 'gif', 'color:', 'size:')
+params = ARGV.getopts('', 'upload', 'gif', 'auto-color', 'color:', 'size:')
 
 ## Execution ##
 
@@ -75,10 +75,29 @@ download_image_name = json_data['target_directory'] + file_name
 puts 'Downloading Image ...'
 download_image(client: client, download_image_name: download_image_name)
 
-puts 'Generating LGTM Image ...'
 @color = params['color'] if params['color']
 @size = params['size'] if params['size']
 gif = params['gif']
+
+# Select LGTM string's color from inverted color of original image's average color
+if params['auto-color']
+  puts 'Auto Color Selecting ...'
+  rgb_color = Color.get_average_color_as_rgb(file: ORIGINAL_IMAGE_NAME)
+  inverted_rgb_color = Color.to_inverted_color_as_rgb(rgb_color)
+
+  # NOTE: RMagick need hex color code
+  inverted_hex_color = Color.rgb_to_hex(
+    inverted_rgb_color[:red],
+    inverted_rgb_color[:green],
+    inverted_rgb_color[:blue]
+  )
+
+  puts 'Original Color: ' + rgb_color.to_s
+  puts 'Selected Color: ' + inverted_rgb_color.to_s
+  @color = inverted_hex_color
+end
+
+puts 'Generating LGTM Image ...'
 generate_lgtm(file: ORIGINAL_IMAGE_NAME, text: @text, color: @color, size: @size, gif: gif)
 
 if params['upload']
