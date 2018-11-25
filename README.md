@@ -11,6 +11,7 @@ Generate LGTM image from your favorite images on [Dropbox](http://dropbox.com) !
 + Many options
   + Change "LGTM" text color.
   + Select "LGTM" text color automatically.
+  + Change "LGTM" text itself.
   + Resize the image.
   + Generate Gif image.
   + Upload the image to [Gyazo](https://gyazo.com).
@@ -55,6 +56,14 @@ Use `--auto-color` option
 
 ```sh
 $ ruby lgtm-generator-from-dropbox.rb --auto-color
+```
+
+### Change LGTM string
+
+Use `--text` option
+
+```sh
+$ ruby lgtm-generator-from-dropbox.rb --text GREAT
 ```
 
 ### Change LGTM image size
