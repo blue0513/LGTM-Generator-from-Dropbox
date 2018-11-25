@@ -27,7 +27,7 @@ def download_image(client:, download_image_name:)
   end
 end
 
-def generate_lgtm(file:, text:, color:, size:, gif:)
+def generate_lgtm(file:, text:, color:, size:, gif:, cjk_font:)
   img = Magick::Image.read(file).first
 
   if size
@@ -46,7 +46,14 @@ def generate_lgtm(file:, text:, color:, size:, gif:)
 
   generator = gif ? Generator::Gif : Generator::Jpg
   output_file = gif ? OUTPUT_GIF_NAME : OUTPUT_IMAGE_NAME
-  generator.generate!(img: img, text: text, color: color, font_size: font_size, output_file: output_file)
+  generator.generate!(
+    img: img,
+    text: text,
+    color: color,
+    font_size: font_size,
+    output_file: output_file,
+    cjk_font: cjk_font
+  )
 end
 
 ## Read options ##
@@ -79,6 +86,7 @@ download_image(client: client, download_image_name: download_image_name)
 @size = params['size'] if params['size']
 @text = params['text'] if params['text']
 gif = params['gif']
+cjk_font = json_data['cjk_font']
 
 # Select LGTM string's color from inverted color of original image's average color
 if params['auto-color']
@@ -99,7 +107,14 @@ if params['auto-color']
 end
 
 puts 'Generating LGTM Image ...'
-generate_lgtm(file: ORIGINAL_IMAGE_NAME, text: @text, color: @color, size: @size, gif: gif)
+generate_lgtm(
+  file: ORIGINAL_IMAGE_NAME,
+  text: @text,
+  color: @color,
+  size: @size,
+  gif: gif,
+  cjk_font: cjk_font
+)
 
 if params['upload']
   puts 'Uploading Image to Gyazo ...'
