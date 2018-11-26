@@ -66,6 +66,18 @@ Use `--text` option
 $ ruby lgtm-generator-from-dropbox.rb --text GREAT
 ```
 
+#### CJK languages support
+
+In `settings.json`, you should add `cjk_font` as the PATH of the proper font in your local machine.
+
+For example, 
+
+```json
+{
+  "cjk_font": "/Library/Fonts/ヒラギノ丸ゴ ProN W4.ttc"
+}
+```
+
 ### Change LGTM image size
 
 Use `--size` option  

@@ -1,3 +1,5 @@
+require './lib/string.rb'
+
 module Generator
   module Base
     def drawer
@@ -15,11 +17,12 @@ module Generator
     module_function
 
     # duck type
-    def generate!(img:, text:, font_size:, color:, output_file:)
+    def generate!(img:, text:, font_size:, color:, output_file:, cjk_font:)
       cloned = img.dup
 
       # TODO: position
       drawer.annotate(cloned, 0, 0, 0, 0, text) do
+        self.font = cjk_font if text.contains_cjk?
         self.pointsize = font_size
         self.fill = color
       end
@@ -33,12 +36,13 @@ module Generator
     module_function
 
     # duck type
-    def generate!(img:, text:, font_size:, color:, output_file:)
+    def generate!(img:, text:, font_size:, color:, output_file:, cjk_font:)
       image_list = Magick::ImageList.new.tap do |list|
         offsets.each do |offset_x|
           cloned = img.dup
 
           drawer.annotate(cloned, 0, 0, offset_x, 0, text) do
+            self.font = cjk_font if text.contains_cjk?
             self.pointsize = font_size
             self.fill = color
           end

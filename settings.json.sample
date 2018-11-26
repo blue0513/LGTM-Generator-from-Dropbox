@@ -1,5 +1,6 @@
 {
 "access_token": "YOUR_ACCESS_TOKEN",
 "target_directory": "/YOUR/DIRECTORY/",
-"gyazo_access_token": "YOUR_GYAZO_ACCESS_TOKEN"
+"gyazo_access_token": "YOUR_GYAZO_ACCESS_TOKEN",
+"cjk_font": "/YOUR/PATH/TO/CJK_FONT"
 }
