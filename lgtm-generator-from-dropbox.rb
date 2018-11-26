@@ -51,7 +51,7 @@ end
 
 ## Read options ##
 
-params = ARGV.getopts('', 'upload', 'gif', 'auto-color', 'color:', 'size:')
+params = ARGV.getopts('', 'upload', 'gif', 'auto-color', 'color:', 'size:', 'text:')
 
 ## Execution ##
 
@@ -77,6 +77,7 @@ download_image(client: client, download_image_name: download_image_name)
 
 @color = params['color'] if params['color']
 @size = params['size'] if params['size']
+@text = params['text'] if params['text']
 gif = params['gif']
 
 # Select LGTM string's color from inverted color of original image's average color
