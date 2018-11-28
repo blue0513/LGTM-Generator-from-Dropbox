@@ -9,3 +9,5 @@ gem 'dropbox_api'
 gem 'rmagick'
 gem 'json'
 gem 'faraday'
+gem 'color'
+

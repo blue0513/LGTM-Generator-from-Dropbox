@@ -3,9 +3,10 @@ require 'dropbox_api'
 require 'RMagick'
 require 'json'
 require 'optparse'
+require 'color'
 require './lib/generator.rb'
 require './lib/uploader.rb'
-require './lib/color.rb'
+require './lib/color_tone.rb'
 
 ## Settings ##
 
@@ -88,22 +89,15 @@ download_image(client: client, download_image_name: download_image_name)
 gif = params['gif']
 cjk_font = json_data['cjk_font']
 
-# Select LGTM string's color from inverted color of original image's average color
+# Select LGTM string's color from inverted high contrast color of original image's average color
 if params['auto-color']
   puts 'Auto Color Selecting ...'
-  rgb_color = Color.get_average_color_as_rgb(file: ORIGINAL_IMAGE_NAME)
-  inverted_rgb_color = Color.to_inverted_color_as_rgb(rgb_color)
-
-  # NOTE: RMagick need hex color code
-  inverted_hex_color = Color.rgb_to_hex(
-    inverted_rgb_color[:red],
-    inverted_rgb_color[:green],
-    inverted_rgb_color[:blue]
-  )
+  rgb_color = ColorTone.get_average_color_as_rgb(file: ORIGINAL_IMAGE_NAME)
+  inverted_rgb_color = ColorTone.calc_inverted_high_contrast_color_as_rgb(rgb_color)
 
   puts 'Original Color: ' + rgb_color.to_s
   puts 'Selected Color: ' + inverted_rgb_color.to_s
-  @color = inverted_hex_color
+  @color = ColorTone.rgb_to_hex(inverted_rgb_color)
 end
 
 puts 'Generating LGTM Image ...'
