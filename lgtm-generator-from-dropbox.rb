@@ -93,7 +93,7 @@ cjk_font = json_data['cjk_font']
 if params['auto-color']
   puts 'Auto Color Selecting ...'
   rgb_color = ColorTone.get_average_color_as_rgb(file: ORIGINAL_IMAGE_NAME)
-  inverted_rgb_color = ColorTone.calc_contrast_color_as_rgb(rgb_color)
+  inverted_rgb_color = ColorTone.calc_inverted_high_contrast_color_as_rgb(rgb_color)
 
   puts 'Original Color: ' + rgb_color.to_s
   puts 'Selected Color: ' + inverted_rgb_color.to_s

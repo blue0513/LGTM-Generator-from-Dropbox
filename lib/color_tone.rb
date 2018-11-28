@@ -14,7 +14,7 @@ module ColorTone
     { red: red, green: green, blue: blue }
   end
 
-  def calc_contrast_color_as_rgb(rgb_hash)
+  def calc_inverted_high_contrast_color_as_rgb(rgb_hash)
     rgb = Color::RGB.from_fraction(rgb_hash[:red], rgb_hash[:green], rgb_hash[:blue])
     hsl = rgb.to_hsl
 
