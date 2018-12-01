@@ -7,6 +7,7 @@ require 'color'
 require './lib/generator.rb'
 require './lib/uploader.rb'
 require './lib/color_tone.rb'
+require './lib/history.rb'
 
 ## Settings ##
 
@@ -59,7 +60,7 @@ end
 
 ## Read options ##
 
-params = ARGV.getopts('', 'upload', 'gif', 'auto-color', 'color:', 'size:', 'text:')
+params = ARGV.getopts('', 'upload', 'gif', 'auto-color', 'history', 'color:', 'size:', 'text:')
 
 ## Execution ##
 
@@ -77,7 +78,17 @@ puts 'Reading Dropbox files ...'
 file_list = client.list_folder(json_data['target_directory'], recursive: true)
 
 # Get an image randomly in the directory
-file_name = file_list.entries.sample.name
+# If `history` option is enabled, The least frequently used image will be adopted
+if params['history']
+  while true
+    file_name = file_list.entries.sample.name
+    puts 'Check by history: ' + file_name
+    break if History.should_adopt?(file_name)
+  end
+else
+  file_name = file_list.entries.sample.name
+end
+puts 'Adopt: ' + file_name
 download_image_name = json_data['target_directory'] + file_name
 
 puts 'Downloading Image ...'
@@ -118,5 +129,6 @@ if params['upload']
   @image_url = UploadToGyazo.upload(path: path, access_token: access_token, is_gif: params['gif'])
 end
 
+History.write_history(file_name) if params['history']
 puts 'Finish!!'
 puts @image_url unless @image_url.nil?

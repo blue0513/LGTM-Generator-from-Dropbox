@@ -15,6 +15,7 @@ Generate LGTM image from your favorite images on [Dropbox](http://dropbox.com) !
   + Resize the image.
   + Generate Gif image.
   + Upload the image to [Gyazo](https://gyazo.com).
+  + Consider the usage frequency.
 
 ## Usage
 
@@ -106,4 +107,15 @@ Then, use `--upload` option
 ```sh
 $ ruby lgtm-generator-from-dropbox.rb --upload
 # After uploading image, You can get the Gyazo Image URL
+```
+
+### Consider the use of frequency
+
+use `--history` option
+
+By reading `history.json` automatically, the least frequently used image will be adopted as output image.
+
+```sh
+$ ruby lgtm-generator-from-dropbox.rb --history
+# history.json will be created
 ```
