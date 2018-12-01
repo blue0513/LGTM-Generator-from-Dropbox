@@ -10,6 +10,17 @@ module Generator
         self.gravity = Magick::SouthEastGravity
       }
     end
+
+    def attach_transparent_background!(img:, output_file:, width:, height:, alpha: 0.2)
+      overlay_img = Magick::Image.new(width, height) {
+        self.background_color = 'white'
+      }
+      overlay_img.alpha(Magick::ActivateAlphaChannel)
+      overlay_img.opacity = Magick::QuantumRange - (Magick::QuantumRange * alpha)
+
+      img.composite!(overlay_img, Magick::SouthEastGravity, Magick::OverCompositeOp)
+      img.write(output_file)
+    end
   end
 
   module Jpg
@@ -19,6 +30,13 @@ module Generator
     # duck type
     def generate!(img:, text:, font_size:, color:, output_file:, cjk_font:)
       cloned = img.dup
+
+      attach_transparent_background!(
+        img: cloned,
+        output_file: output_file,
+        width: text.contains_cjk? ? cloned.columns : (cloned.columns * 3/4),
+        height: font_size
+      )
 
       # TODO: position
       drawer.annotate(cloned, 0, 0, 0, 0, text) do
