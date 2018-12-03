@@ -7,6 +7,7 @@ module Generator
       Magick::Draw.new {
         self.font = 'Helvetica'
         self.font_weight = Magick::BoldWeight
+        self.stroke = 'black'
         self.gravity = Magick::SouthEastGravity
       }
     end
