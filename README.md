@@ -12,6 +12,7 @@ Generate LGTM image from your favorite images on [Dropbox](http://dropbox.com) !
   + Change "LGTM" text color.
   + Select "LGTM" text color automatically.
   + Change "LGTM" text itself.
+  + Set semi-transparent background under "LGTM" text.
   + Resize the image.
   + Generate Gif image.
   + Upload the image to [Gyazo](https://gyazo.com).
@@ -77,6 +78,14 @@ For example,
 {
   "cjk_font": "/Library/Fonts/ヒラギノ丸ゴ ProN W4.ttc"
 }
+```
+
+### Set semi-transparent background under LGTM string
+
+Use `--background` option
+
+```sh
+$ ruby lgtm-generator-from-dropbox.rb --background
 ```
 
 ### Change LGTM image size
