@@ -28,15 +28,17 @@ module Generator
     module_function
 
     # duck type
-    def generate!(img:, text:, font_size:, color:, output_file:, cjk_font:)
+    def generate!(img:, text:, font_size:, color:, output_file:, cjk_font:, background:)
       cloned = img.dup
 
-      attach_transparent_background!(
-        img: cloned,
-        output_file: output_file,
-        width: text.contains_cjk? ? cloned.columns : (cloned.columns * 3/4),
-        height: font_size
-      )
+      if background
+        attach_transparent_background!(
+          img: cloned,
+          output_file: output_file,
+          width: text.contains_cjk? ? cloned.columns : (cloned.columns * 3/4),
+          height: font_size
+        )
+      end
 
       # TODO: position
       drawer.annotate(cloned, 0, 0, 0, 0, text) do
@@ -54,7 +56,7 @@ module Generator
     module_function
 
     # duck type
-    def generate!(img:, text:, font_size:, color:, output_file:, cjk_font:)
+    def generate!(img:, text:, font_size:, color:, output_file:, cjk_font:, background:)
       image_list = Magick::ImageList.new.tap do |list|
         offsets.each do |offset_x|
           cloned = img.dup

@@ -29,7 +29,7 @@ def download_image(client:, download_image_name:)
   end
 end
 
-def generate_lgtm(file:, text:, color:, size:, gif:, cjk_font:)
+def generate_lgtm(file:, text:, color:, size:, gif:, cjk_font:, background:)
   img = Magick::Image.read(file).first
 
   if size
@@ -54,13 +54,14 @@ def generate_lgtm(file:, text:, color:, size:, gif:, cjk_font:)
     color: color,
     font_size: font_size,
     output_file: output_file,
-    cjk_font: cjk_font
+    cjk_font: cjk_font,
+    background: background
   )
 end
 
 ## Read options ##
 
-params = ARGV.getopts('', 'upload', 'gif', 'auto-color', 'history', 'color:', 'size:', 'text:')
+params = ARGV.getopts('', 'upload', 'gif', 'auto-color', 'history', 'background', 'color:', 'size:', 'text:')
 
 ## Execution ##
 
@@ -99,6 +100,7 @@ download_image(client: client, download_image_name: download_image_name)
 @text = params['text'] if params['text']
 gif = params['gif']
 cjk_font = json_data['cjk_font']
+background = params['params']
 
 # Select LGTM string's color from inverted high contrast color of original image's average color
 if params['auto-color']
@@ -118,7 +120,8 @@ generate_lgtm(
   color: @color,
   size: @size,
   gif: gif,
-  cjk_font: cjk_font
+  cjk_font: cjk_font,
+  background: background
 )
 
 if params['upload']
