@@ -8,15 +8,15 @@ Generate LGTM image from your favorite images on [Dropbox](http://dropbox.com) !
 
 + Download an image from your Dropbox.
 + Add "LGTM" on the downloaded image.
-+ Many options
-  + Change "LGTM" text color.
-  + Select "LGTM" text color automatically.
-  + Change "LGTM" text itself.
-  + Set semi-transparent background under "LGTM" text.
-  + Resize the image.
-  + Generate Gif image.
-  + Upload the image to [Gyazo](https://gyazo.com).
-  + Consider the usage frequency.
++ Many options (use `--help` to see them or see [Advanced Usage](#advanced-usage))
+  + `--color [COLOR]`: Change "LGTM" text color.
+  + `--auto-color`: Select "LGTM" text color automatically.
+  + `--text [STRING]`: Change "LGTM" text itself.
+  + `--background`: Set semi-transparent background under "LGTM" text.
+  + `--size [NUMxNUM]`: Resize the image.
+  + `--gif`: Generate Gif image.
+  + `--upload`: Upload the image to [Gyazo](https://gyazo.com).
+  + `--history`: Consider the usage frequency.
 
 ## Usage
 
