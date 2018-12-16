@@ -12,6 +12,7 @@ require './lib/history.rb'
 ## Settings ##
 
 ORIGINAL_IMAGE_NAME = 'sample.jpg'.freeze
+ORIGINAL_GIF_NAME = 'sample.gif'.freeze
 OUTPUT_IMAGE_NAME = 'output.jpg'.freeze
 OUTPUT_GIF_NAME = 'output.gif'.freeze
 JSON_FILE_PATH = 'settings.json'.freeze
@@ -22,14 +23,17 @@ JSON_FILE_PATH = 'settings.json'.freeze
 ## Methods ##
 
 def download_image(client:, download_image_name:)
+  filename =
+    File.extname(download_image_name) == '.gif' ? ORIGINAL_GIF_NAME : ORIGINAL_IMAGE_NAME
+
   client.download(download_image_name) do |chunk|
-    open(ORIGINAL_IMAGE_NAME, 'wb') do |file|
+    open(filename, 'wb') do |file|
       file << chunk
     end
   end
 end
 
-def generate_lgtm(file:, text:, color:, size:, gif:, cjk_font:, background:)
+def generate_lgtm(file:, text:, color:, size:, gif_text:, cjk_font:, background:, use_gif:)
   img = Magick::Image.read(file).first
 
   if size
@@ -46,8 +50,14 @@ def generate_lgtm(file:, text:, color:, size:, gif:, cjk_font:, background:)
   width = img.columns
   font_size = width / @text.size
 
-  generator = gif ? Generator::Gif : Generator::Jpg
-  output_file = gif ? OUTPUT_GIF_NAME : OUTPUT_IMAGE_NAME
+  if use_gif
+    generator = Generator::Gif
+    output_file = OUTPUT_GIF_NAME
+  else
+    generator = gif_text ? Generator::TextGif : Generator::Jpg
+    output_file = gif_text ? OUTPUT_GIF_NAME : OUTPUT_IMAGE_NAME
+  end
+
   generator.generate!(
     img: img,
     text: text,
@@ -61,7 +71,13 @@ end
 
 ## Read options ##
 
-params = ARGV.getopts('', 'upload', 'gif', 'auto-color', 'history', 'background', 'color:', 'size:', 'text:')
+begin
+  params = ARGV.getopts('', 'upload', 'text-gif', 'auto-color', 'history', 'background', 'use-gif', 'color:', 'size:', 'text:')
+rescue OptionParser::InvalidOption => e
+  puts e
+  puts 'Use --help to list available options'
+  return
+end
 
 ## Execution ##
 
@@ -98,14 +114,16 @@ download_image(client: client, download_image_name: download_image_name)
 @color = params['color'] if params['color']
 @size = params['size'] if params['size']
 @text = params['text'] if params['text']
-gif = params['gif']
+gif_text = params['gif-text']
 cjk_font = json_data['cjk_font']
 background = params['params']
+use_gif = params['use-gif']
+filename = use_gif ? ORIGINAL_GIF_NAME : ORIGINAL_IMAGE_NAME
 
 # Select LGTM string's color from inverted high contrast color of original image's average color
 if params['auto-color']
   puts 'Auto Color Selecting ...'
-  rgb_color = ColorTone.get_average_color_as_rgb(file: ORIGINAL_IMAGE_NAME)
+  rgb_color = ColorTone.get_average_color_as_rgb(file: filename)
   inverted_rgb_color = ColorTone.calc_inverted_high_contrast_color_as_rgb(rgb_color)
 
   puts 'Original Color: ' + rgb_color.to_s
@@ -115,21 +133,23 @@ end
 
 puts 'Generating LGTM Image ...'
 generate_lgtm(
-  file: ORIGINAL_IMAGE_NAME,
+  file: filename,
   text: @text,
   color: @color,
   size: @size,
-  gif: gif,
+  gif_text: gif_text,
   cjk_font: cjk_font,
-  background: background
+  background: background,
+  use_gif: use_gif,
 )
 
 if params['upload']
   puts 'Uploading Image to Gyazo ...'
-  path = params['gif'] ? OUTPUT_GIF_NAME : OUTPUT_IMAGE_NAME
+  gif_type = gif_text || use_gif
+  path = gif_type ? OUTPUT_GIF_NAME : OUTPUT_IMAGE_NAME
   access_token = json_data['gyazo_access_token']
 
-  @image_url = UploadToGyazo.upload(path: path, access_token: access_token, is_gif: params['gif'])
+  @image_url = UploadToGyazo.upload(path: path, access_token: access_token, is_gif: gif_type)
 end
 
 History.write_history(file_name) if params['history']

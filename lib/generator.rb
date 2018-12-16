@@ -58,6 +58,25 @@ module Generator
 
     # duck type
     def generate!(img:, text:, font_size:, color:, output_file:, cjk_font:, background:)
+      list = Magick::ImageList.new(img.filename)
+      list.each { |frame|
+        drawer.annotate(frame, 0, 0, 0, 0, text) do
+          self.font = cjk_font if text.contains_cjk?
+          self.pointsize = font_size
+          self.fill = color
+        end
+      }
+
+      list.write(output_file)
+    end
+  end
+
+  module TextGif
+    extend Base
+    module_function
+
+    # duck type
+    def generate!(img:, text:, font_size:, color:, output_file:, cjk_font:, background:)
       image_list = Magick::ImageList.new.tap do |list|
         offsets.each do |offset_x|
           cloned = img.dup
