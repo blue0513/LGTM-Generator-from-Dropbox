@@ -13,10 +13,18 @@ Generate LGTM image from your favorite images on [Dropbox](http://dropbox.com) !
   + Select "LGTM" text color automatically.
   + Change "LGTM" text itself.
   + Set semi-transparent background under "LGTM" text.
+	+ Use Gif image as original one.
   + Resize the image.
   + Generate Gif image.
   + Upload the image to [Gyazo](https://gyazo.com).
   + Consider the usage frequency.
+
+## Notes 2018/12
+
+`--gif` option has been obsoleted.  
+To add gif text on image, use `--text-gif`.
+
+If you want to use Gif image on Dropbox, use `--use-gif` option.
 
 ## Usage
 
@@ -88,6 +96,14 @@ Use `--background` option
 $ ruby lgtm-generator-from-dropbox.rb --background
 ```
 
+### Use Gif as original image on Dropbox
+
+Use `--use-gif` option
+
+```sh
+$ ruby lgtm-generator-from-dropbox.rb --use-gif
+```
+
 ### Change LGTM image size
 
 Use `--size` option  
@@ -99,10 +115,10 @@ $ ruby lgtm-generator-from-dropbox.rb --size 640x480
 
 ### Generate LGTM gif
 
-Use `--gif` option
+Use `--text-gif` option
 
 ```sh
-$ ruby lgtm-generator-from-dropbox.rb --gif
+$ ruby lgtm-generator-from-dropbox.rb --text-gif
 # output.gif will be generated instead
 ```
 
