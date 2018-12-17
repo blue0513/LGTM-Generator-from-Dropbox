@@ -59,6 +59,9 @@ module Generator
     # duck type
     def generate!(img:, text:, font_size:, color:, output_file:, cjk_font:, background:)
       list = Magick::ImageList.new(img.filename)
+      # Each image in the new imagelist is formed by flattening all the previous images.
+      list = list.coalesce
+
       list.each { |frame|
         drawer.annotate(frame, 0, 0, 0, 0, text) do
           self.font = cjk_font if text.contains_cjk?
@@ -67,6 +70,8 @@ module Generator
         end
       }
 
+      # Optimize the images in the list
+      list = list.optimize_layers(Magick::OptimizeLayer)
       list.write(output_file)
     end
   end
