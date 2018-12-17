@@ -93,17 +93,25 @@ client = DropboxApi::Client.new(
 
 puts 'Reading Dropbox files ...'
 file_list = client.list_folder(json_data['target_directory'], recursive: true)
+filename_list = file_list.entries
 
 # Get an image randomly in the directory
+# If `use-gif` option is enabled, Only .gif image will be selected
 # If `history` option is enabled, The least frequently used image will be adopted
+if params['use-gif']
+  filename_list = filename_list.select { |file|
+    File.extname(file.name) == '.gif'
+  }
+end
+
 if params['history']
   while true
-    file_name = file_list.entries.sample.name
+    file_name = filename_list.sample.name
     puts 'Check by history: ' + file_name
     break if History.should_adopt?(file_name)
   end
 else
-  file_name = file_list.entries.sample.name
+  file_name = filename_list.sample.name
 end
 puts 'Adopt: ' + file_name
 download_image_name = json_data['target_directory'] + file_name
