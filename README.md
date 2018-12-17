@@ -98,7 +98,8 @@ $ ruby lgtm-generator-from-dropbox.rb --background
 
 ### Use Gif as original image on Dropbox
 
-Use `--use-gif` option
+Use `--use-gif` option  
+Only `.gif` image will be selected as the original image.
 
 ```sh
 $ ruby lgtm-generator-from-dropbox.rb --use-gif
