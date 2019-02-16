@@ -93,7 +93,12 @@ client = DropboxApi::Client.new(
 
 puts 'Reading Dropbox files ...'
 file_list = client.list_folder(json_data['target_directory'], recursive: true)
-filename_list = file_list.entries
+# NOTE: DropboxApi's response inclues the parent directory name
+# By rejecting it, we can get just image files' name
+filename_list = file_list.entries.reject { |file|
+  directory_name = json_data['target_directory']
+  file&.name == File.basename(directory_name)
+}
 
 # Get an image randomly in the directory
 # If `use-gif` option is enabled, Only .gif image will be selected
@@ -108,7 +113,7 @@ if params['history']
   while true
     file_name = filename_list.sample.name
     puts 'Check by history: ' + file_name
-    break if History.should_adopt?(file_name)
+    break if History.should_adopt?(file_name, filename_list)
   end
 else
   file_name = filename_list.sample.name
