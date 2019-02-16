@@ -2,7 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     color (1.8)
-    dropbox_api (0.1.13)
+    dropbox_api (0.1.15)
       faraday (>= 0.8, <= 0.15.2)
       oauth2 (>= 1.1, <= 1.4)
     faraday (0.12.2)
@@ -19,17 +19,17 @@ GEM
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
     rack (2.0.6)
-    rmagick (2.16.0)
+    rmagick (3.0.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   color
-  dropbox_api
+  dropbox_api (~> 0.1.15)
   faraday
   json
   rmagick
 
 BUNDLED WITH
-   1.17.1
+   1.17.3
