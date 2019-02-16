@@ -20,7 +20,7 @@ module History
     end
   end
 
-  def should_adopt?(image_name)
+  def should_adopt?(image_name, filename_list)
     create_history_file_if_needed
 
     json_data = open(HISTORY_JSON_FILE_PATH) do |io|
@@ -29,9 +29,27 @@ module History
 
     # NOTE: nil.to_i => 0
     count = json_data[image_name].to_i
-    min_count = json_data.sort_by{ |k, v| v.to_i }.first&.last.to_i
+    min_count = calculate_min_count(json_data, filename_list)
 
     count <= min_count
+  end
+
+  # NOTE: To alculate only once, use instance variable
+  def calculate_min_count(json_data, filename_list)
+    return @min_count unless @min_count.nil?
+
+    if exist_zero_counted_file?(json_data, filename_list)
+      @min_count = 0
+    else
+      @min_count = json_data.sort_by{ |k, v| v.to_i }.first&.last.to_i
+    end
+  end
+
+  def exist_zero_counted_file?(json_data, filename_list)
+    zero_counted_files = filename_list.reject { |item|
+      json_data.has_key?(item&.name)
+    }
+    zero_counted_files.count > 0
   end
 
   def create_history_file_if_needed
