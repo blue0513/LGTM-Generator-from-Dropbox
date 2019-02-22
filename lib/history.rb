@@ -20,36 +20,31 @@ module History
     end
   end
 
-  def should_adopt?(image_name, filename_list)
+  def should_adopt?(image_name, dropbox_files)
     create_history_file_if_needed
 
-    json_data = open(HISTORY_JSON_FILE_PATH) do |io|
+    counts_by_filename = open(HISTORY_JSON_FILE_PATH) do |io|
       JSON.load(io)
     end
 
-    # NOTE: nil.to_i => 0
-    count = json_data[image_name].to_i
-    min_count = calculate_min_count(json_data, filename_list)
+    count = counts_by_filename[image_name] || 0
+    min_count = calculate_min_count(counts_by_filename, dropbox_files)
 
     count <= min_count
   end
 
-  # NOTE: To alculate only once, use instance variable
-  def calculate_min_count(json_data, filename_list)
-    return @min_count unless @min_count.nil?
+  def calculate_min_count(counts_by_filename, dropbox_files)
+    filenames_dropbox = dropbox_files.map { |e| e&.name }.compact
+    filenames = counts_by_filename.keys
 
-    if exist_zero_counted_file?(json_data, filename_list)
-      @min_count = 0
+    if (filenames_dropbox - filenames).size > 0
+      # There are files not in the history
+      0
     else
-      @min_count = json_data.sort_by{ |k, v| v.to_i }.first&.last.to_i
+      counts_by_filename.
+        select { |k,v| filenames_dropbox.include?(k) }.
+        values.min
     end
-  end
-
-  def exist_zero_counted_file?(json_data, filename_list)
-    zero_counted_files = filename_list.reject { |item|
-      json_data.has_key?(item&.name)
-    }
-    zero_counted_files.count > 0
   end
 
   def create_history_file_if_needed
