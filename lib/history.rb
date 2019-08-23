@@ -34,15 +34,14 @@ module History
   end
 
   def calculate_min_count(counts_by_filename, dropbox_files)
-    filenames_dropbox = dropbox_files.map { |e| e&.name }.compact
     filenames = counts_by_filename.keys
 
-    if (filenames_dropbox - filenames).size > 0
+    if (dropbox_files - filenames).size > 0
       # There are files not in the history
       0
     else
       counts_by_filename.
-        select { |k,v| filenames_dropbox.include?(k) }.
+        select { |k,v| dropbox_files.include?(k) }.
         values.min
     end
   end
